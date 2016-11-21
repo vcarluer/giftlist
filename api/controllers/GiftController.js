@@ -28,6 +28,7 @@ module.exports = {
 						}
 
 						client.quit();
+						sails.log.debug('Create OK');
 						return res.ok();
 					});
 				}
@@ -56,6 +57,7 @@ module.exports = {
 						}
 
 						client.quit();
+						sails.log.debug('Del OK');
 						return res.ok();
 					});
 				}
