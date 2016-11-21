@@ -44,3 +44,27 @@ function removeGift() {
 		}
 	});
 }
+
+function ready(fn) {
+	if (document.readyState != 'loading'){
+		fn();
+	} else {
+		document.addEventListener('DOMContentLoaded', fn);
+	}
+}
+
+ready(function() {
+	var giftList = document.getElementById('giftList');
+	if (giftList) {
+		reqwest({
+			url: '/list/get',
+			method: 'get',
+			error: function(err) {
+				console.log(err);
+			},
+			success: function(resp) {
+				console.log(resp);
+			}
+		});
+	}
+});

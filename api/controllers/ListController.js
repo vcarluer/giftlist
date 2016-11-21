@@ -10,12 +10,16 @@ var gifts = [];
 
 module.exports = {
 	do: function (req, res) {
+		return returnView(res);
+	},
+	get: function (req, res) {
 		client.smembers("names", function(err, names) {
 			if (err) {
-				handleError(res, err);
+				return handleError(res, err);
 			}
 			
 			if (names) {
+				sails.log.debug('got names');
 				names.forEach(function(name) {
 						sails.log.debug('Getting name: ' + name);
 						client.hgetall(name, function(err, gift) {
@@ -25,25 +29,25 @@ module.exports = {
 								sails.log.debug('Got gift: ' + name);
 								gifts.push(gift);
 								if (gifts.length == names.length) {
-									return res.view({ gifts: gifts });
+									sails.log.debug("returning gifts");
+									return res.send(gifts);
 								}
 							}
 						});
 				});
 			} else {
-				returnView();
+				sails.log.debug('no names');
+				return res.ok([]);
 			}
 		});
 	}
 };
 
-function returnView() {
-	client.quit();
+function returnView(res) {
 	res.view();
 }
 
 function handleError(res, err) {
-	client.quit();
 	sails.log.error(err);
 	return res.serverError(err);
 }

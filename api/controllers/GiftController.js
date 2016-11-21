@@ -9,7 +9,7 @@ var client = redis.createClient({ db: 10 })
 
 module.exports = {
 	show: function (req, res) {
-		res.view();
+		return res.view();
 	},
 	create: function (req, res) {
 		sails.log.debug('create');
@@ -19,7 +19,6 @@ module.exports = {
 			client.hmset(body.name, body, function(err) {
 				if (err) {
 					sails.log.error(err);
-					client.quit();
 					return res.serverError(err);
 				} else {
 					client.sadd("names", body.name, function(err) {
@@ -27,14 +26,12 @@ module.exports = {
 							sails.log.error(err);
 						}
 
-						client.quit();
 						sails.log.debug('Create OK');
 						return res.ok();
 					});
 				}
 			});
 		} else {
-			client.quit();
 			return res.badRequest('no body or no name');
 		}
 	},
@@ -46,17 +43,14 @@ module.exports = {
 			client.del(name, function(err) {
 				if (err) {
 					sails.log.error(err);
-					client.quit();
 					return res.serverError(err);
 				} else {
 					client.srem("names", name, function(err) {
 						if (err) {
 							sails.log.error(err);
-							client.quit();
 							return res.serverError(err);
 						}
 
-						client.quit();
 						sails.log.debug('Del OK');
 						return res.ok();
 					});
@@ -64,7 +58,6 @@ module.exports = {
 			});
 		}
 		else {
-			client.quit();
 			return res.badrequest('no name specified');
 		}
 	}
