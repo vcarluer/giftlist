@@ -27,3 +27,20 @@ function createGift() {
 		}
 	});
 }
+
+function removeGift() {
+	var giftData = {
+		name: document.getElementById('removeName').value
+	};
+	reqwest({
+		url: '/gift/del',
+		method: 'post',
+		data: giftData,
+		error: function(err) {
+			console.log(err);
+		},
+		success: function(resp) {
+			console.log(resp);
+		}
+	});
+}
