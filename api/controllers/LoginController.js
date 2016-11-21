@@ -8,15 +8,21 @@
 module.exports = {
 	do: function (req, res) {
 		var loginpass = req.param('loginpass');
-		if (loginpass && loginpass == 'neige') {
+		if (loginpass && (loginpass == 'neige' || loginpass == 'flocon')) {
 			req.session.authenticated = true;
-			res.redirect('/list/do');
+			if (loginpass == 'neige') {
+				res.redirect('/list/do');
+			} else {
+				req.session.admin = true;
+				res.redirect('/gift/show');
+			}
 		} else {
 			res.view();
 		}
 	},
 	out: function (req, res) {
 		req.session.authenticated = false;
+		req.session.admin = false;
 		res.redirect('/');
 	}
 };

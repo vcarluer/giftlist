@@ -28,6 +28,9 @@ module.exports.policies = {
 	},
 	ListController: {
 		'*': 'sessionAuth'
+	},
+	GiftController: {
+		'*': 'adminAuth'
 	}
   /***************************************************************************
   *                                                                          *
