@@ -30,7 +30,8 @@ module.exports.policies = {
 		'*': 'sessionAuth'
 	},
 	GiftController: {
-		'*': 'adminAuth'
+		'*': 'adminAuth',
+		'take': 'sessionAuth'
 	}
   /***************************************************************************
   *                                                                          *

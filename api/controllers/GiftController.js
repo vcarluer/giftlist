@@ -60,6 +60,35 @@ module.exports = {
 		else {
 			return res.badrequest('no name specified');
 		}
+	},
+	take: function (req, res) {
+		sails.log.debug('take');
+		sails.log.debug(req.body);
+		var name = req.param('name');
+		var takeValue = req.param('take');
+		if (!name) {
+			return res.badRequest('name not set');
+		} else {
+			client.sismember('names', 'name', function(err, exist) {
+				if (err) {
+					sails.log.error(err);
+					return res.serverError(err);
+				}
+
+				if (!exist) {
+					return res.badRequest('name does not exist');
+				}
+
+				client.hset(name, 'taken', takeValue, function(err) {
+					if (err) {
+						sails.log.error(err);
+						return res.serverError(err);
+					}
+
+					sails.log.debug(name + ' set taken to ' + takeValue);
+					return res.ok();
+				});
+			});
+		}
 	}
 };
-

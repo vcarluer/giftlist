@@ -24,6 +24,11 @@ function createGift() {
 		},
 		success: function(resp) {
 			console.log(resp);
+			document.getElementById('giftPicture').value = "";
+			document.getElementById('giftName').value = "";
+			document.getElementById('giftDescription').value = "";
+			document.getElementById('giftPrice').value = "";
+			document.getElementById('giftChild').value = "";
 		}
 	});
 }
@@ -34,6 +39,25 @@ function removeGift() {
 	};
 	reqwest({
 		url: '/gift/del',
+		method: 'post',
+		data: giftData,
+		error: function(err) {
+			console.log(err);
+		},
+		success: function(resp) {
+			console.log(resp);
+			document.getElementById('removeName').value = "";
+		}
+	});
+}
+
+function take(name, takeValue) {
+	var giftData = {
+		name: name,
+		take: takeValue
+	};
+	reqwest({
+		url: '/gift/take',
 		method: 'post',
 		data: giftData,
 		error: function(err) {
@@ -62,8 +86,18 @@ ready(function() {
 			error: function(err) {
 				console.log(err);
 			},
-			success: function(resp) {
-				console.log(resp);
+			success: function(gifts) {
+				console.log(gifts);
+				giftList.innerHTML = "";
+				gifts.forEach(function(gift) {
+					var giftDiv = document.createElement('div');
+					giftDiv.innerHTML += "<div>";
+					giftDiv.innerHTML += "<img src='" + gift.picture + "'>";
+					giftDiv.innerHTML += gift.name;
+					giftDiv.innerHTML += "<input type='button' onclick='take(\"" + gift.name + "\", true)' value='take'></input>";
+					giftDiv.innerHTML += "<input type='button' onclick='take(\"" + gift.name + "\", false)' value='untake'></input>";
+					giftList.appendChild(giftDiv);
+				});
 			}
 		});
 	}
